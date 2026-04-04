@@ -1,13 +1,15 @@
 <div align="center">
   <br />
-  <a href="https://laravel.com" target="_blank">
-    <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="300" style="vertical-align: middle;">
+  <a href="https://laravel.com" target="_blank" style="display: inline-block; vertical-align: middle;">
+    <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="300" alt="Laravel Logo">
   </a>
-  <span style="display: inline-block; vertical-align: middle; font-size: 48px; font-weight: 100; margin: 0 30px; color: #cbd5e1;">+</span>
-  <a href="https://nuxt.com" target="_blank">
-    <img src=".\public\nuxt-logo.svg" width="200" style="vertical-align: middle;">
+
+  <p>+++++++++++++++++++++++++++++++++</p>
+
+  <a href="https://nuxt.com" target="_blank" style="display: inline-block; vertical-align: middle;">
+    <img src="public/nuxt-logo.svg" width="250" alt="Nuxt Logo">
   </a>
-  <br />
+  <br /><br />
 </div>
 
 A modern, containerized full-stack environment featuring a Type-Safe API Contract, Request Abortion management, and a Managed Docker orchestration.
