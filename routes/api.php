@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 
 use App\Http\Resources\SystemStatusResource;
+use App\Http\Controllers\Api\TaskController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -35,3 +36,5 @@ Route::get('/status', function () {
 
     return new SystemStatusResource($data);
 });
+
+Route::apiResource('tasks', TaskController::class);
