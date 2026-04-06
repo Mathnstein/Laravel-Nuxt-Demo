@@ -15,7 +15,6 @@ class SystemStatusResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'title'            => $this['title'],
             'database_status'  => $this['database_status'],
             'database_version' => $this['database_version'],
             'redis_status'     => $this['redis_status'],

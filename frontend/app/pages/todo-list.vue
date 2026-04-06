@@ -1,18 +1,30 @@
 <script setup lang="ts">
   import { ref, computed } from 'vue'
   import { $api } from '~/api'
-  import type { Task } from '~/types'
+  import type { LaravelResponse, Task } from '~/types'
   const signal = useAbortSignal()
 
   // Get tasks from the API with auto reactivity and built in loading/error states
-  const {data: tasks, status} = useAsyncData<Task[]>(
+  const {data: response, status} = useAsyncData<LaravelResponse<Task[]>>(
     'roadmap-tasks',
     () => $api.tasks.getTasks({ signal }), 
     { 
         server: false,
-        default: () => []
+        default: () => {
+          return {
+            data: []
+          }
+        }
     }
   )
+
+  // We use a local ref to manage the tasks in the UI
+  const tasks = ref<Task[]>([])
+  watch(response, (newVal) => {
+    if (newVal?.data) {
+      tasks.value = newVal.data
+    }
+  }, { immediate: true })
 
   // Helper to wrap our async logic and track all api requests
   const activeRequests = ref(new Set<number>())
@@ -114,10 +126,10 @@
   }
 
   // Derived state for easier UI handling
-  const todoTasks = computed(() => tasks.value.filter(t => !t.completed))
-  const completedTasks = computed(() => tasks.value.filter(t => t.completed))
+  const todoTasks = computed(() => tasks.value.filter(t => !t.completed) ?? [])
+  const completedTasks = computed(() => tasks.value.filter(t => t.completed) ?? [])
   const progress = computed(() => {
-    const total = tasks.value.length
+    const total = tasks.value.length ?? 0
     const finished = completedTasks.value.length
     return Math.round((finished / total) * 100)
   })

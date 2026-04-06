@@ -5,6 +5,9 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+use App\Models\Task;
+use App\Observers\TaskObserver;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -20,6 +23,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // We return flat data unless explicitly defined otherwise in the Resource.
         JsonResource::withoutWrapping();
+
+        // Register the TaskObserver
+        Task::observe(TaskObserver::class);
+
     }
 }

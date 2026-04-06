@@ -105,8 +105,8 @@ const cancelEdit = () => {
 
         <span 
             v-else
-            :tabindex="task.isSyncing ? -1 : 0"
-            @click="startEdit"
+            :tabindex="task.isSyncing || task.completed ? -1 : 0"
+            @dblclick.stop.prevent="startEdit"
             @keyup.enter.prevent="startEdit"
             @keyup.space.prevent="startEdit"
             :class="[

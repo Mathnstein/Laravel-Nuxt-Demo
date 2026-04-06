@@ -1,8 +1,9 @@
+import type { LaravelResponse } from '~/types/api';
 import type { Task } from '../types/tasks';
 
 export const tasksService = {
     getTasks: (options = {}) => {
-        return useApi<Task[]>(
+        return useApi<LaravelResponse<Task[]>>(
             `/tasks`,
             options
         );

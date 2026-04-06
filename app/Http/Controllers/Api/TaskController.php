@@ -17,7 +17,22 @@ class TaskController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        return TaskResource::collection(Task::all());
+        # Use redis cache to store the tasks for 60 seconds
+        $cacheKey = Task::cacheKey(auth()->id());
+        $fromCache = cache()->has($cacheKey);
+        $tasksData = cache()->remember($cacheKey, now()->addDay(), function () {
+            return Task::all()->toArray();
+        });
+
+        # Hydrate the tasks data back into Eloquent models so we can use TaskResource
+        $tasks = Task::hydrate($tasksData);
+
+        return TaskResource::collection($tasks)->additional([
+            'meta' => [
+                'cached' => $fromCache,
+                'cache_key' => $cacheKey,
+            ]
+        ]);
     }
 
     /**
@@ -31,6 +46,7 @@ class TaskController extends Controller
             'completed' => 'boolean',
         ]);
         $task = Task::create($validated);
+
         return new TaskResource($task);
     }
 
@@ -45,6 +61,7 @@ class TaskController extends Controller
             'completed' => 'sometimes|boolean',
         ]);
         $task->update($validated);
+
         return new TaskResource($task);
     }
 
@@ -55,6 +72,7 @@ class TaskController extends Controller
     public function destroy(Task $task): Response
     {
         $task->delete();
+
         // Return a 204 No Content response to indicate successful deletion
         return response()->noContent();
     }

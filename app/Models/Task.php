@@ -11,4 +11,13 @@ class Task extends Model
         'completed' => 'boolean',
         'id' => 'integer'
     ];
+
+    /**
+     * The Single Source of Truth for the Task Cache Key.
+     */
+    public static function cacheKey(?int $userId = null): string
+    {
+        $userId = $userId ?? 'guest';
+        return "tasks:all:user:{$userId}";
+    }
 }
