@@ -26,8 +26,8 @@
       </nav>
     </header>
 
-    <main class="flex-1 overflow-y-auto p-6 md:p-10">
-      <div class="max-w-4xl mx-auto">
+    <main class="flex flex-1 overflow-y-auto">
+      <div class="flex-1 flex mx-auto">
         <NuxtPage />
       </div>
     </main>

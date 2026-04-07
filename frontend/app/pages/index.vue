@@ -4,7 +4,7 @@
       Hello, Developer! 👋
     </h2>
     <p class="text-lg text-slate-600 leading-relaxed">
-      Welcome to a <em>Nuxt 4 + Laravel</em> demo.
+      Welcome to a <em>Nuxt + Laravel</em> demo.
       This is a clean slate where your frontend and backend shake hands. 
       Use the navigation above to explore the system's health.
     </p>

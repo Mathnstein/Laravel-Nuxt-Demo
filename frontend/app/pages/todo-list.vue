@@ -137,8 +137,8 @@
 </script>
 
 <template>
-  <div class="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
-    <header class="max-w-2xl mx-auto text-center">
+  <div class="flex-1 flex flex-col max-w-6xl mx-auto p-4 md:p-6 space-y-6">
+    <header class="w-full mx-auto text-center">
       <div class="flex items-center justify-center gap-3">
         <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Roadmap</h1>
         
@@ -163,7 +163,7 @@
         </div>
       </div>
 
-      <div v-if="status === 'success'" class="mt-4 w-full bg-slate-200 rounded-full h-2.5">
+      <div v-if="status === 'success'" class="mt-4 bg-slate-200 rounded-full h-2.5">
         <div 
           class="bg-blue-600 h-2.5 rounded-full transition-all duration-700" 
           :style="{ width: `${progress}%` }"
@@ -171,15 +171,15 @@
       </div>
     </header>
 
-    <div v-if="['pending', 'idle'].includes(status)" class="flex flex-col md:flex-row gap-4 md:gap-12 opacity-50">
+    <div v-if="['pending', 'idle'].includes(status)" class="flex flex-1 flex-col md:flex-row gap-4 md:gap-12 opacity-50">
       <div v-for="i in 2" :key="i" class="w-full md:w-1/2 space-y-4">
         <div class="h-4 w-24 bg-slate-200 animate-pulse rounded" />
-        <div v-for="j in 3" :key="j" class="h-16 w-full bg-slate-100 animate-pulse rounded-xl" />
+        <div v-for="j in 4" :key="j" class="h-16 w-full bg-slate-100 animate-pulse rounded-xl" />
       </div>
     </div>
 
-    <main v-else-if="status === 'success'" class="flex flex-col md:flex-row gap-4 md:gap-12 items-start">
-      <section class="w-full md:w-1/2">
+    <main v-else-if="status === 'success'" class="flex flex-col md:flex-row gap-4 md:gap-12 min-h-0">
+      <section class="w-full md:w-1/2 flex flex-col">
         <div class="flex items-center justify-between mb-3 px-1">
           <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Upcoming</h2>
           <span class="text-[12px] font-bold bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">
@@ -211,7 +211,7 @@
           </button>
         </div>
         
-        <ul class="space-y-2 overflow-y-auto max-h-[60vh] md:max-h-[60vh] pr-2 scrollbar-thin">
+        <ul class="space-y-2 overflow-y-auto pr-2 scrollbar-thin">
           <Task 
             v-for="task in todoTasks" 
             :key="task.id" 
@@ -222,7 +222,7 @@
         </ul>
       </section>
 
-      <section class="w-full md:w-1/2 pt-4 md:pt-0 border-t border-slate-100 md:border-t-0">
+      <section class="w-full md:w-1/2 pt-4 md:pt-0 border-t border-slate-100 md:border-t-0 flex flex-1 flex-col">
         <div class="flex items-center justify-between mb-3 px-1">
           <h2 class="text-xs font-bold text-green-600 uppercase tracking-widest">Achieved</h2>
           <span class="text-[12px] font-bold bg-green-100 text-green-600 px-2 py-0.5 rounded-full">
@@ -230,7 +230,7 @@
           </span>
         </div>
 
-        <ul class="space-y-2 overflow-y-auto max-h-[60vh] md:max-h-[60vh] pr-2 opacity-75 scrollbar-thin">
+        <ul class="space-y-2 overflow-y-auto pr-2 opacity-75 scrollbar-thin">
           <Task 
             v-for="task in completedTasks" 
             :key="task.id" 
