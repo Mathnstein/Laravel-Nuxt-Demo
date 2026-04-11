@@ -15,17 +15,31 @@ class TaskController extends Controller
      * GET /api/tasks
      * Return a list of all tasks.
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
-        # Use redis cache to store the tasks for 60 seconds
-        $cacheKey = Task::cacheKey(auth()->id());
-        $fromCache = cache()->has($cacheKey);
-        $tasksData = cache()->remember($cacheKey, now()->addDay(), function () {
-            return Task::all()->toArray();
-        });
 
-        # Hydrate the tasks data back into Eloquent models so we can use TaskResource
-        $tasks = Task::hydrate($tasksData);
+        # Validate the search query parameter if provided
+        $validated = $request->validate([
+            'search' => 'nullable|string|max:255',
+        ]);
+        $search = $validated['search'] ?? null;
+        $userId = auth()->id();
+        $cacheKey = Task::cacheKey($userId);
+
+        # If a search query is provided, bypass the cache and return filtered results
+        if ($search) {
+            $tasks = Task::where('name', 'like', "%{$search}%")->get();
+            $fromCache = false; 
+        } else {
+            # Use redis cache to store the tasks
+            $fromCache = cache()->has($cacheKey);
+            $tasksData = cache()->remember($cacheKey, now()->addDay(), function () {
+                return Task::all()->toArray();
+            });
+
+            # Hydrate the tasks data back into Eloquent models so we can use TaskResource
+            $tasks = Task::hydrate($tasksData);
+        }
 
         return TaskResource::collection($tasks)->additional([
             'meta' => [

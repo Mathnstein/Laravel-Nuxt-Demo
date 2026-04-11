@@ -1,6 +1,6 @@
 import { useRuntimeConfig } from "nuxt/app";
 
-export const useApi = <T>(path: string, options = {}) => {
+export const useApi = <T>(path: string, params?: Record<string, any>, options = {}) => {
     // Now Nuxt will recognize this because it's in the composables folder
     const config = useRuntimeConfig();
 
@@ -9,6 +9,7 @@ export const useApi = <T>(path: string, options = {}) => {
 
     return $fetch<T>(path, {
         baseURL,
+        params,
         ...options,
     });
 };

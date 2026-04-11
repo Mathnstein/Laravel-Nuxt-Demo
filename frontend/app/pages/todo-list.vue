@@ -1,22 +1,38 @@
 <script setup lang="ts">
-  import { ref, computed } from 'vue'
+  import { ref, computed} from 'vue'
   import { $api } from '~/api'
   import type { LaravelResponse, Task } from '~/types'
+
   const signal = useAbortSignal()
+  const searchQuery = ref(''); // Bound to <input v-model="searchQuery">
+  const debouncedSearch = ref('');
+  let searchController: AbortController | null = null;
 
   // Get tasks from the API with auto reactivity and built in loading/error states
-  const {data: response, status} = useAsyncData<LaravelResponse<Task[]>>(
+  const {data: response, status, refresh} = useAsyncData<LaravelResponse<Task[]>>(
     'roadmap-tasks',
-    () => $api.tasks.getTasks({ signal }), 
+    () => {
+      if (searchController) searchController.abort()
+      searchController = new AbortController()
+
+      const params = debouncedSearch.value ? { search: debouncedSearch.value } : {}
+      return $api.tasks.getTasks(params, { signal: AbortSignal.any([signal, searchController.signal]) })
+    }, 
     { 
-        server: false,
-        default: () => {
-          return {
-            data: []
-          }
+      server: false,
+      default: () => {
+        return {
+          data: []
         }
+      }
     }
   )
+
+  // Debounce the search input to avoid spamming the API on every keystroke
+  watchDebounced(searchQuery, (val: string) => {
+    debouncedSearch.value = val;
+    refresh();
+  }, { debounce: 300 });
 
   // We use a local ref to manage the tasks in the UI
   const tasks = ref<Task[]>([])
@@ -162,6 +178,13 @@
           </transition>
         </div>
       </div>
+
+      <input 
+        v-model="searchQuery"
+        placeholder="Search over tasks..."
+        type="text"
+        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all shadow-sm text-sm"
+        >
 
       <div v-if="status === 'success'" class="mt-4 bg-slate-200 rounded-full h-2.5">
         <div 
