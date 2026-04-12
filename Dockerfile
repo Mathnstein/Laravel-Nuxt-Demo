@@ -5,32 +5,46 @@ WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
 COPY frontend/ ./
-RUN npm run build
+RUN npx nuxi generate
 
 # --- Stage 2: PHP 8.5 Backend ---
 FROM php:8.5-fpm-alpine
 WORKDIR /var/www/html
 
 # System dependencies for Laravel
-RUN apk add --no-cache \
-    libpng-dev libzip-dev zip unzip git oniguruma-dev curl-dev icu-dev
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring zip bcmath gd intl
+RUN chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions pdo_mysql redis mbstring zip bcmath gd intl opcache
 
 # Copy the Laravel code from the root
-COPY . .
+COPY app/ ./app
+COPY bootstrap/ ./bootstrap
+COPY config/ ./config
+COPY database/ ./database
+COPY public/ ./public
+COPY routes/ ./routes
+COPY resources/ ./resources
+COPY artisan .
+COPY composer.json .
 
-# Copy Nuxt build output into Laravel's public directory
-# Nuxt usually outputs to .output/public
-COPY --from=frontend-builder /app/frontend/.output/public ./public/dist
+# Create cache directory for Laravel
+RUN mkdir -p storage/framework/sessions \
+             storage/framework/views \
+             storage/framework/cache \
+             storage/logs \
+             bootstrap/cache
 
 # Composer setup
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
+# Copy Nuxt build output into Laravel's public directory
+# Nuxt usually outputs to .output/public
+COPY --from=frontend-builder /app/frontend/.output/public ./public
+
 # Permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 8000
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000", "--env=testing"]

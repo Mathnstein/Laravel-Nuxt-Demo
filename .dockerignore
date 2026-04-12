@@ -1,0 +1,26 @@
+# Version Control
+.git
+.gitignore
+.github
+
+# Laravel Garbage
+node_modules/
+vendor/
+storage/logs/*.log
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*.php
+.phpunit.cache
+tests/
+phpunit.xml
+auth.json
+
+# Frontend Garbage
+frontend/node_modules/
+frontend/.nuxt/
+frontend/.output/
+frontend/dist/
+
+# Env Files
+.env
+.env.testing
