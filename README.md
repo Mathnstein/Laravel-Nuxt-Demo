@@ -12,75 +12,53 @@
   <br /><br />
 </div>
 
-A modern, containerized full-stack environment featuring a Type-Safe API Contract, Request Abortion management, and a Managed Docker orchestration.
+A simple todo app that demos off how a full stack application can be written in Nuxt / Laravel.
 🚀 Tech Stack
 
-    Frontend: Nuxt 4 (SSR Enabled), Tailwind CSS
+    Frontend: Nuxt, Tailwind CSS
 
-    Backend: Laravel 11 (API Mode)
+    Backend: Laravel
 
     Infrastructure: Laravel Sail (Docker)
 
     Cache/Queue: Redis
 
-    Database: MySQL 8
-
-🛠️ Infrastructure Milestones (Completed)
-
-    [x] Docker Orchestration: Integrated Laravel, Redis, MySQL, and Nuxt into a unified docker-compose network.
-
-    [x] API Resource Contract: Established a structured handshake between Laravel API Resources and Nuxt TypeScript interfaces.
-
-    [x] System Status Engine: Real-time health reporting for Database, Redis, and PHP versions.
-
-    [x] Smart Navigation: Multi-page Nuxt routing with persistent layouts and "sticky" navigation states.
-
-    [x] Concurrency Guard: Implemented AbortController logic to physically terminate pending PHP processes when a user navigates away.
-
-📋 Lab Roadmap
-
-    [ ] Database CRUD: Implementing full Read/Write/Delete cycles.
-
-    [ ] Form Handling & Validation: Real-time error mapping from Laravel 422 responses to Nuxt UI inputs.
-
-    [ ] Service Expansion: Scaling the $api layer to handle new micro-services and third-party integrations.
+    Database: MySQL
 
 📂 Project Structure
-Plaintext
-
+```Plaintext
 .
-├── app/                # Nuxt 4 Frontend
+├── frontend/           # Nuxt Frontend
 │   ├── api/            # Managed API Services & Interceptors
 │   ├── pages/          # Auto-routed Vue components
 │   └── app.vue         # Core layout with overflow & navigation logic
-├── src/                # Laravel 11 Backend (Standard Structure)
-└── docker-compose.yml  # Lab Orchestration
+├── ./                  # Laravel Backend (Standard Structure> routes/, app/models/ etc...)
+└── compose.yml         # Lab Orchestration
+└── compose.prod.yml    # For using prebuild image
+```
 
 🚦 Getting Started
 1. Spin up the Lab
-Bash
-
+```Bash
 ./vendor/bin/sail up -d
+```
 
 2. Prepare the Frontend
-Bash
-
-cd app
+```Bash
+cd frontend
 npm install
-npx nuxi prepare # Generates TypeScript shims
+npx nuxi prepare
+```
 
 3. Run Migrations
-Bash
-
+```Bash
 ./vendor/bin/sail artisan migrate
+```
 
-🧠 Key Architectures implemented today
-The "Managed" API Call
-
-Our service layer doesn't just fetch; it manages the connection lifecycle. By passing a signal to every request, we ensure the backend never works harder than the frontend requires.
-The Laravel Wrapper Handshake
-
-All responses follow the LaravelResponse<T> interface, ensuring that whether we are fetching a simple string or a complex collection, TypeScript knows exactly where the data property sits.
-📄 License
+🚦 Production
+To pull the most recent image from docker hub
+```Bash
+docker-compose -f compose.prod.yaml --env-file .env.prod up -d
+```
 
 This lab is open-sourced software licensed under the MIT license.
