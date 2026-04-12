@@ -13,7 +13,8 @@
 </div>
 
 A simple todo app that demos off how a full stack application can be written in Nuxt / Laravel.
-🚀 Tech Stack
+
+## Tech Stack
 
     Frontend: Nuxt, Tailwind CSS
 
@@ -25,7 +26,7 @@ A simple todo app that demos off how a full stack application can be written in 
 
     Database: MySQL
 
-📂 Project Structure
+## Project Structure
 ```Plaintext
 .
 ├── frontend/           # Nuxt Frontend
@@ -37,7 +38,7 @@ A simple todo app that demos off how a full stack application can be written in 
 └── compose.prod.yml    # For using prebuild image
 ```
 
-🚦 Getting Started
+## Getting Started
 1. Spin up the Lab
 ```Bash
 ./vendor/bin/sail up -d
@@ -55,7 +56,8 @@ npx nuxi prepare
 ./vendor/bin/sail artisan migrate
 ```
 
-🚦 Production
+## Production
+
 To pull the most recent image from docker hub
 ```Bash
 docker-compose -f compose.prod.yaml --env-file .env.prod up -d
