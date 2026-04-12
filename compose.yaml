@@ -2,6 +2,9 @@ name: laravel_nuxt_demo
 services:
     laravel.test:
         container_name: laravel_brain
+        command: >
+            sh -c "php artisan migrate && 
+                   php artisan serve --host=0.0.0.0 --port=80"
         build:
             context: './vendor/laravel/sail/runtimes/8.5'
             dockerfile: Dockerfile
@@ -24,8 +27,10 @@ services:
         networks:
             - sail
         depends_on:
-            - mysql
-            - redis
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
     mysql:
         container_name: laravel_db
         image: 'mysql:8.4'
