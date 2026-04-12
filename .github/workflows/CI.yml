@@ -36,7 +36,8 @@ jobs:
 
       - name: Run Migrations and Tests
         run: |
-          php artisan key:generate --env=testing
+          cp .env.example .env
+          php artisan key:generate
           php artisan migrate --force
           php artisan test
         env:
