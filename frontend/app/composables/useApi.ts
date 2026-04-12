@@ -7,7 +7,9 @@ export const useApi = <T>(path: string, params?: Record<string, any>, options = 
     // Example: Pulling the base URL from nuxt.config.ts
     const baseURL = config.public.apiBase;
 
-    return $fetch<T>(path, {
+    const apiPath = path.startsWith('/api') ? path : `/api${path.startsWith('/') ? '' : '/'}${path}`;
+
+    return $fetch<T>(apiPath, {
         baseURL,
         params,
         ...options,
