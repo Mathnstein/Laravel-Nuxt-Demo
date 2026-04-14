@@ -11,6 +11,8 @@ RUN npx nuxi generate
 FROM php:8.5-fpm-alpine
 WORKDIR /var/www/html
 
+RUN apk update && apk upgrade --no-cache
+
 # System dependencies for Laravel
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
@@ -46,5 +48,7 @@ COPY --from=frontend-builder /app/frontend/.output/public ./public
 # Permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
+USER www-data
+
 EXPOSE 8000
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000", "--env=testing"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
